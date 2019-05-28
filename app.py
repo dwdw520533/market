@@ -1,16 +1,34 @@
 # -*- coding: utf-8 -*-
-from websocket import create_connection
 import gzip
 import time
 import conf
 import json
+import utils
 import datetime
 import requests
-import utils
+import functools
+from cache_util import cache
+from websocket import create_connection
 
 send_key = '12431-0355c73a8b4ddbf191cce09acdccbfbc'
 
 
+def time_lock(func):
+    @functools.wraps(func)
+    def wrapper(*sub, **kw):
+        mutex_key = func.__name__
+        interval = getattr(conf, 'NOTIFY_INTERVAL', 300)
+        try:
+            lock_state = cache.add(mutex_key, 1, interval)
+            if not lock_state:
+                return None
+            return func(*sub, **kw)
+        finally:
+            cache.delete(mutex_key)
+    return wrapper
+
+
+@time_lock
 def send_notify(text):
     requests.get(f'https://pushbear.ftqq.com/sub?sendkey={send_key}&text={text}')
 
