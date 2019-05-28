@@ -41,10 +41,10 @@ def check_eth_price(price):
         if price >= float(value):
             send_notify('ETH已上涨至指定价格%s，请及时关注。' % price)
     try:
-        list(map(_check_min_value, conf.MIN_VALUE.split('|')))
-        list(map(_check_max_value, conf.MAX_VALUE.split('|')))
-    except Exception:
-        pass
+        list(map(_check_min_value, str(conf.MIN_VALUE).split('|')))
+        list(map(_check_max_value, str(conf.MAX_VALUE).split('|')))
+    except Exception as ex:
+        print(ex)
 
 
 if __name__ == '__main__':
