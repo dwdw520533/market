@@ -33,7 +33,6 @@ def send_notify(text):
 
 def check_min_value(value):
     try:
-        now = utils.strftime(datetime.datetime.now())
         if value <= float(conf.MIN_VALUE):
             send_notify('ETH已下跌至指定价格%s，请及时关注。' % value)
         if value >= float(conf.MAX_VALUE):
