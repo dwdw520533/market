@@ -30,7 +30,9 @@ def time_lock(func):
 
 @time_lock
 def send_notify(text):
-    requests.get(f'https://pushbear.ftqq.com/sub?sendkey={send_key}&text={text}')
+    notify_url = f'https://pushbear.ftqq.com/sub?sendkey={send_key}&text={text}'
+    print('#notify: ', notify_url)
+    requests.get(notify_url)
 
 
 def check_min_value(value):
