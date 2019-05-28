@@ -1,4 +1,5 @@
 requests
+python-dateutil
 websocket-client
 -e git+git@github.com:dwpy/alita.git#egg=alita
 -e git+git@repo.gstianfu.com:backend/libs/rtconfig.git#egg=rtconfig
