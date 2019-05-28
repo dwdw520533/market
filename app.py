@@ -49,6 +49,7 @@ if __name__ == '__main__':
             ws.send(tradeStr)
         else:
             data = json.loads(result)
-            print(data)
-            check_min_value(float(data['tick']['close']))
+            if 'tick' in data:
+                print(data)
+                check_min_value(float(data['tick']['close']))
 
