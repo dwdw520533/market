@@ -16,15 +16,11 @@ send_key = '12431-0355c73a8b4ddbf191cce09acdccbfbc'
 def time_lock(func):
     @functools.wraps(func)
     def wrapper(*sub, **kw):
-        mutex_key = func.__name__
         interval = getattr(conf, 'NOTIFY_INTERVAL', 300)
-        try:
-            lock_state = cache.add(mutex_key, 1, interval)
-            if not lock_state:
-                return None
-            return func(*sub, **kw)
-        finally:
-            cache.delete(mutex_key)
+        lock_state = cache.add(func.__name__, 'time_lock', interval)
+        if not lock_state:
+            return None
+        return func(*sub, **kw)
     return wrapper
 
 
