@@ -31,12 +31,18 @@ def send_notify(text):
     requests.get(notify_url)
 
 
-def check_min_value(value):
+def check_eth_price(price):
+
+    def _check_min_value(value):
+        if price <= float(value):
+            send_notify('ETH已下跌至指定价格%s，请及时关注。' % price)
+
+    def _check_max_value(value):
+        if price >= float(value):
+            send_notify('ETH已上涨至指定价格%s，请及时关注。' % price)
     try:
-        if value <= float(conf.MIN_VALUE):
-            send_notify('ETH已下跌至指定价格%s，请及时关注。' % value)
-        if value >= float(conf.MAX_VALUE):
-            send_notify('ETH已上涨至指定价格%s，请及时关注。' % value)
+        list(map(_check_min_value, conf.MIN_VALUE.split('|')))
+        list(map(_check_max_value, conf.MAX_VALUE.split('|')))
     except Exception:
         pass
 
@@ -66,5 +72,4 @@ if __name__ == '__main__':
             data = json.loads(result)
             if 'tick' in data:
                 print(data)
-                check_min_value(float(data['tick']['close']))
-
+                check_eth_price(float(data['tick']['close']))
