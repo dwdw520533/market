@@ -3,8 +3,6 @@ import gzip
 import time
 import conf
 import json
-import utils
-import datetime
 import requests
 import functools
 from cache_util import cache
@@ -61,15 +59,18 @@ if __name__ == '__main__':
 
     ws.send(tradeStr)
     while True:
-        compressData = ws.recv()
-        result = gzip.decompress(compressData).decode('utf-8')
-        if result[:7] == '{"ping"':
-            ts = result[8:21]
-            pong = '{"pong":'+ts+'}'
-            ws.send(pong)
-            ws.send(tradeStr)
-        else:
-            data = json.loads(result)
-            if 'tick' in data:
-                print(data)
-                check_eth_price(float(data['tick']['close']))
+        try:
+            compressData = ws.recv()
+            result = gzip.decompress(compressData).decode('utf-8')
+            if result[:7] == '{"ping"':
+                ts = result[8:21]
+                pong = '{"pong":'+ts+'}'
+                ws.send(pong)
+                ws.send(tradeStr)
+            else:
+                data = json.loads(result)
+                if 'tick' in data:
+                    print(data)
+                    check_eth_price(float(data['tick']['close']))
+        except Exception:
+            time.sleep(5)
